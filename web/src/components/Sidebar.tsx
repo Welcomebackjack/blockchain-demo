@@ -8,13 +8,15 @@ import {
   ShieldCheck,
   ScrollText,
   FileCheck,
-  Lock
+  Lock,
+  PenTool
 } from 'lucide-react';
 import clsx from 'clsx';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Upload Document', href: '/upload', icon: Upload },
+  { name: 'Sign Document', href: '/sign', icon: PenTool },
   { name: 'Verify Document', href: '/verify', icon: ShieldCheck },
   { name: 'Audit Trail', href: '/audit', icon: ScrollText },
 ];

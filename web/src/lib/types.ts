@@ -1,4 +1,4 @@
-// Type definitions for the blockchain document management system
+// Shared types for the blockchain document management system
 
 export enum UserRole {
   BORROWER = 'BORROWER',

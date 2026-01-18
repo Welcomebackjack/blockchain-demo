@@ -10,9 +10,11 @@ import {
   Shield,
   Clock,
   User,
-  Building2
+  Building2,
+  PenTool
 } from 'lucide-react';
 import clsx from 'clsx';
+import RequestSignatureModal from '@/components/RequestSignatureModal';
 
 export default function UploadPage() {
   const [selectedTransaction, setSelectedTransaction] = useState('');
@@ -26,6 +28,8 @@ export default function UploadPage() {
     blockId: string;
     documentId: string;
   } | null>(null);
+  const [documentBase64, setDocumentBase64] = useState('');
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -63,6 +67,13 @@ export default function UploadPage() {
     // Simulate upload process
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
+    // Convert file to base64 for signature requests
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = btoa(
+      new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+    setDocumentBase64(base64);
+
     // Generate mock hash and block ID
     const fileContent = await file.text();
     const hash = computeHash(fileContent + Date.now());
@@ -84,6 +95,8 @@ export default function UploadPage() {
     setSelectedTransaction('');
     setDocumentType('');
     setUploadResult(null);
+    setDocumentBase64('');
+    setShowSignatureModal(false);
   };
 
   return (
@@ -325,6 +338,16 @@ export default function UploadPage() {
             </div>
           </div>
 
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={() => setShowSignatureModal(true)}
+              className="flex-1 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <PenTool className="w-5 h-5" />
+              Request Signatures
+            </button>
+          </div>
+
           <div className="flex gap-4">
             <button
               onClick={resetForm}
@@ -340,6 +363,18 @@ export default function UploadPage() {
             </a>
           </div>
         </div>
+      )}
+
+      {/* Signature Request Modal */}
+      {uploadResult && (
+        <RequestSignatureModal
+          isOpen={showSignatureModal}
+          onClose={() => setShowSignatureModal(false)}
+          documentId={uploadResult.documentId}
+          transactionId={selectedTransaction}
+          documentName={file?.name || `${documentType}.pdf`}
+          documentBase64={documentBase64}
+        />
       )}
     </div>
   );
