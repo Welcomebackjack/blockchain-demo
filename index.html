@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Loan Document Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .transaction {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .transaction h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .transaction-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .transaction-info span {
+            font-size: 0.95em;
+        }
+
+        .transaction-info strong {
+            color: #667eea;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-open { background: #ffc107; color: #000; }
+        .status-closing { background: #17a2b8; color: white; }
+        .status-recorded { background: #28a745; color: white; }
+        .status-completed { background: #6c757d; color: white; }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        select, input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .verification-section {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .verification-section .form-group {
+            flex: 1;
+        }
+
+        .result-box {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .result-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .document-list {
+            margin-top: 10px;
+        }
+
+        .document-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-hash {
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .event-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .event-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+        }
+
+        .event-item {
+            position: relative;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .event-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 2px solid white;
+        }
+
+        .event-type {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .event-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Blockchain Loan Document Management</h1>
+            <p>Secure, Verifiable, Immutable Document Tracking for Real Estate Transactions</p>
+        </div>
+
+        <!-- Current Transactions -->
+        <div class="card">
+            <h2>📋 Current Transactions</h2>
+            <div id="transactionsList"></div>
+        </div>
+
+        <!-- Upload Document -->
+        <div class="card">
+            <h2>📤 Upload Document</h2>
+            <div class="upload-section">
+                <div class="form-group">
+                    <label for="transactionSelect">Select Transaction:</label>
+                    <select id="transactionSelect">
+                        <option value="">-- Select Transaction --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="documentType">Document Type:</label>
+                    <input type="text" id="documentType" placeholder="e.g., Promissory Note, Deed of Trust">
+                </div>
+                <div class="form-group">
+                    <label for="fileUpload">Select File:</label>
+                    <input type="file" id="fileUpload">
+                </div>
+                <div class="form-group">
+                    <label for="actorEmail">Your Email:</label>
+                    <input type="text" id="actorEmail" placeholder="john.attorney@lawfirm.com">
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Your Role:</label>
+                    <select id="userRole">
+                        <option value="ATTORNEY">Attorney</option>
+                        <option value="LENDER">Lender</option>
+                        <option value="BORROWER">Borrower</option>
+                        <option value="TITLE_COMPANY">Title Company</option>
+                        <option value="NOTARY">Notary</option>
+                        <option value="COUNTY_CLERK">County Clerk</option>
+                    </select>
+                </div>
+                <button onclick="uploadDocument()">Upload to Blockchain</button>
+                <div id="uploadResult"></div>
+            </div>
+        </div>
+
+        <!-- Verify Document -->
+        <div class="card">
+            <h2>✅ Verify Document</h2>
+            <div class="verification-section">
+                <div class="form-group">
+                    <label for="verifyFile">Select File to Verify:</label>
+                    <input type="file" id="verifyFile">
+                </div>
+                <button onclick="verifyDocument()">Verify on Blockchain</button>
+            </div>
+            <div id="verifyResult"></div>
+        </div>
+
+        <!-- Document Events -->
+        <div class="card">
+            <h2>📜 Document Event History</h2>
+            <div id="eventHistory"></div>
+        </div>
+    </div>
+
+    <!-- Include the TypeScript-compiled JavaScript -->
+    <script type="module">
+        // Import the modules
+        import { BlockchainService, computeFileHash } from './dist/BlockchainService.js';
+        
+        // Make them available globally for the inline script
+        window.BlockchainService = BlockchainService;
+        window.computeFileHash = computeFileHash;
+
+        // UserRole enum
+        window.UserRole = {
+            BORROWER: 'BORROWER',
+            LENDER: 'LENDER',
+            TITLE_COMPANY: 'TITLE_COMPANY',
+            ATTORNEY: 'ATTORNEY',
+            NOTARY: 'NOTARY',
+            COUNTY_CLERK: 'COUNTY_CLERK'
+        };
+
+        // Load transactions on page load
+        loadTransactions();
+    </script>
+
+    <script>
+        function loadTransactions() {
+            const transactions = window.BlockchainService.getTransactions();
+            const listDiv = document.getElementById('transactionsList');
+            const selectElement = document.getElementById('transactionSelect');
+            
+            listDiv.innerHTML = '';
+            selectElement.innerHTML = '<option value="">-- Select Transaction --</option>';
+            
+            transactions.forEach(tx => {
+                // Add to list display
+                const txDiv = document.createElement('div');
+                txDiv.className = 'transaction';
+                txDiv.innerHTML = `
+                    <h3>${tx.id}</h3>
+                    <div class="transaction-info">
+                        <span><strong>Property:</strong> ${tx.propertyAddress}</span>
+                        <span><strong>Loan Amount:</strong> $${tx.loanAmount.toLocaleString()}</span>
+                        <span><strong>Lender:</strong> ${tx.lenderName}</span>
+                        <span><strong>Borrower:</strong> ${tx.borrowerName}</span>
+                    </div>
+                    <div>
+                        <span class="status-badge status-${tx.status.toLowerCase()}">${tx.status}</span>
+                        <span style="margin-left: 10px; color: #666;">📄 ${tx.documents.length} documents</span>
+                    </div>
+                    <div class="document-list" id="docs-${tx.id}"></div>
+                `;
+                listDiv.appendChild(txDiv);
+                
+                // Add documents if any
+                if (tx.documents.length > 0) {
+                    const docsDiv = document.getElementById(`docs-${tx.id}`);
+                    tx.documents.forEach(doc => {
+                        const docItem = document.createElement('div');
+                        docItem.className = 'document-item';
+                        docItem.innerHTML = `
+                            <div>
+                                <strong>${doc.name}</strong> (${doc.type})
+                                <span class="status-badge status-${doc.status.toLowerCase()}" style="margin-left: 10px;">${doc.status}</span>
+                            </div>
+                            <div class="document-hash">${doc.currentHash.substring(0, 16)}...</div>
+                        `;
+                        docsDiv.appendChild(docItem);
+                    });
+                }
+                
+                // Add to select dropdown
+                const option = document.createElement('option');
+                option.value = tx.id;
+                option.textContent = `${tx.id} - ${tx.propertyAddress}`;
+                selectElement.appendChild(option);
+            });
+        }
+
+        async function uploadDocument() {
+            const transactionId = document.getElementById('transactionSelect').value;
+            const docType = document.getElementById('documentType').value;
+            const file = document.getElementById('fileUpload').files[0];
+            const actor = document.getElementById('actorEmail').value;
+            const role = window.UserRole[document.getElementById('userRole').value];
+            const resultDiv = document.getElementById('uploadResult');
+            
+            if (!transactionId || !docType || !file || !actor) {
+                resultDiv.innerHTML = '<div class="result-box result-error">Please fill all fields</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loader"></div> Uploading to blockchain...';
+            
+            try {
+                const doc = await window.BlockchainService.createDocument(
+                    transactionId,
+                    file,
+                    docType,
+                    actor,
+                    role
+                );
+                
+                if (doc) {
+                    resultDiv.innerHTML = `
+                        <div class="result-box result-success">
+                            ✅ Document uploaded successfully!<br>
+                            <strong>Document ID:</strong> ${doc.id}<br>
+                            <strong>Hash:</strong> <span class="document-hash">${doc.currentHash}</span><br>
+                            <strong>Block:</strong> <span class="document-hash">${doc.events[0].blockId.substring(0, 20)}...</span>
+                        </div>
+                    `;
+                    
+                    // Reload transactions to show new document
+                    loadTransactions();
+                    updateEventHistory();
+                } else {
+                    resultDiv.innerHTML = '<div class="result-box result-error">Failed to upload document. Transaction not found.</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result-box result-error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function verifyDocument() {
+            const file = document.getElementById('verifyFile').files[0];
+            const resultDiv = document.getElementById('verifyResult');
+            
+            if (!file) {
+                resultDiv.innerHTML = '<div class="result-box result-error">Please select a file to verify</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="loader"></div> Verifying on blockchain...';
+            
+            try {
+                const result = await window.BlockchainService.verifyDocument(file);
+                
+                if (result.verified) {
+                    resultDiv.innerHTML = `
+                        <div class="result-box result-success">
+                            ✅ <strong>DOCUMENT VERIFIED</strong><br>
+                            This document exists on the blockchain!<br><br>
+                            <strong>Document:</strong> ${result.doc.name}<br>
+                            <strong>Type:</strong> ${result.doc.type}<br>
+                            <strong>Status:</strong> ${result.doc.status}<br>
+                            <strong>Hash:</strong> <span class="document-hash">${result.doc.currentHash}</span><br>
+                            <strong>Verified Block:</strong> <span class="document-hash">${result.matchedEvent.blockId.substring(0, 20)}...</span>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-box result-error">
+                            ❌ <strong>VERIFICATION FAILED</strong><br>
+                            This document does not exist on the blockchain or has been modified.
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result-box result-error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function updateEventHistory() {
+            const transactions = window.BlockchainService.getTransactions();
+            const historyDiv = document.getElementById('eventHistory');
+            historyDiv.innerHTML = '';
+            
+            let allEvents = [];
+            
+            // Collect all events from all documents
+            transactions.forEach(tx => {
+                tx.documents.forEach(doc => {
+                    doc.events.forEach(event => {
+                        allEvents.push({
+                            ...event,
+                            documentName: doc.name,
+                            transactionId: tx.id
+                        });
+                    });
+                });
+            });
+            
+            // Sort by timestamp (most recent first)
+            allEvents.sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (allEvents.length === 0) {
+                historyDiv.innerHTML = '<p style="color: #666;">No events recorded yet</p>';
+                return;
+            }
+            
+            const timeline = document.createElement('div');
+            timeline.className = 'event-timeline';
+            
+            allEvents.slice(0, 10).forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'event-item';
+                const date = new Date(event.timestamp);
+                eventDiv.innerHTML = `
+                    <div class="event-type">${event.type}</div>
+                    <div class="event-details">
+                        <strong>Document:</strong> ${event.documentName}<br>
+                        <strong>Transaction:</strong> ${event.transactionId}<br>
+                        <strong>Actor:</strong> ${event.actorId} (${event.actorRole})<br>
+                        <strong>Time:</strong> ${date.toLocaleString()}<br>
+                        <strong>Block:</strong> <span class="document-hash">${event.blockId.substring(0, 20)}...</span>
+                    </div>
+                `;
+                timeline.appendChild(eventDiv);
+            });
+            
+            historyDiv.appendChild(timeline);
+            
+            if (allEvents.length > 10) {
+                historyDiv.innerHTML += '<p style="text-align: center; color: #666; margin-top: 10px;">Showing latest 10 events</p>';
+            }
+        }
+
+        // Initial load of event history
+        updateEventHistory();
+    </script>
+</body>
+</html>

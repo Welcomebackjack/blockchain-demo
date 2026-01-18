@@ -1,0 +1,44 @@
+{
+  "name": "blockchain-loan-document-demo",
+  "version": "1.0.0",
+  "description": "A demo blockchain service for managing real estate loan documents with verification and audit trail",
+  "main": "dist/demo.js",
+  "scripts": {
+    "build": "tsc",
+    "build:browser": "tsc --module ES2020 --target ES2020",
+    "demo": "npm run build && node dist/demo.js",
+    "demo:docs": "npx ts-node src/documentDemo.ts",
+    "demo:compliance": "npx ts-node src/complianceDemo.ts",
+    "demo:all": "npm run demo:docs && npm run demo:compliance",
+    "dev": "ts-node src/demo.ts",
+    "test": "npm run build && node dist/test.js",
+    "test:all": "npm run test && npm run demo",
+    "serve": "npx http-server -p 8080 -o",
+    "clean": "rm -rf dist sample-docs generated-docs logs .keys test-doc*.txt",
+    "start": "npm run demo"
+  },
+  "keywords": [
+    "blockchain",
+    "real-estate",
+    "loan",
+    "document-management",
+    "verification"
+  ],
+  "author": "Stephen",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^20.0.0",
+    "node-jose": "^2.2.0",
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.34.5",
+    "tesseract.js": "^7.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "winston": "^3.19.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/node-jose": "^1.1.13"
+  }
+}

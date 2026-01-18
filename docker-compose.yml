@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  blockchain-demo:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    volumes:
+      - ./sample-docs:/app/sample-docs
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  # Future services can be added here
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: blockchain_demo
+  #     POSTGRES_USER: demo_user
+  #     POSTGRES_PASSWORD: secure_password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  
+  # ipfs:
+  #   image: ipfs/go-ipfs:latest
+  #   ports:
+  #     - "5001:5001"
+  #     - "8081:8080"
+  #   volumes:
+  #     - ipfs_data:/data/ipfs
+
+volumes:
+  # postgres_data:
+  # ipfs_data:
