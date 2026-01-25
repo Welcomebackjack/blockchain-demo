@@ -64,3 +64,5 @@ temp/
 # OS Files
 Thumbs.db
 Desktop.ini
+.vercel
+.env*.local

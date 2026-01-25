@@ -35,7 +35,7 @@ export default function Sidebar() {
             <Lock className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-gray-900">BlockDoc</h1>
+            <h1 className="font-bold text-gray-900">Realist</h1>
             <p className="text-xs text-gray-500">Loan Document Verification</p>
           </div>
         </div>

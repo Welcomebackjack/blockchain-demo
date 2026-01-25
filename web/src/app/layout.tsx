@@ -3,7 +3,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "BlockDoc - Blockchain Document Verification",
+  title: "Realist - Blockchain Document Verification",
   description: "Secure, verifiable, and immutable document management for real estate loan transactions",
 };
 

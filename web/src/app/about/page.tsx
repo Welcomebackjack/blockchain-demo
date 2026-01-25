@@ -35,9 +35,9 @@ export default function AboutPage() {
       {/* Overview Section */}
       <section className="mb-10">
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-8 text-white mb-6">
-          <h2 className="text-2xl font-bold mb-4">What is BlockDoc?</h2>
+          <h2 className="text-2xl font-bold mb-4">What is Realist?</h2>
           <p className="text-indigo-100 leading-relaxed">
-            BlockDoc is a demonstration of how blockchain technology can revolutionize document
+            Realist is a demonstration of how blockchain technology can revolutionize document
             management in real estate transactions. By combining cryptographic hashing, immutable
             audit trails, and digital signature integration, this system provides unprecedented
             transparency and security for loan documents.
