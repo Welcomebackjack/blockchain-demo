@@ -9,7 +9,8 @@ import {
   ScrollText,
   FileCheck,
   Lock,
-  PenTool
+  PenTool,
+  Info
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Sign Document', href: '/sign', icon: PenTool },
   { name: 'Verify Document', href: '/verify', icon: ShieldCheck },
   { name: 'Audit Trail', href: '/audit', icon: ScrollText },
+  { name: 'About', href: '/about', icon: Info },
 ];
 
 export default function Sidebar() {
